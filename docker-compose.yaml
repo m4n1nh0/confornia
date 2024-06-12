@@ -13,7 +13,7 @@ services:
     ports:
       - "5435:5432"
     networks:
-      - confornia
+      - confornia_net
     volumes:
       - pgdata:/var/lib/postgresql/data/
 
@@ -23,7 +23,7 @@ services:
       context: .
     container_name: confornia_app
     environment:
-      - POSTGRES_URL=postgresql+asyncpg://postgres:postgres@db:5432/confornia
+      - POSTGRES_URL=postgresql+asyncpg://postgres:postgres@confpostgres:5432/confornia
       - DOCS=/docs
       - REDOC=/redoc
       - OPEN_API_URL=/openapi.json
@@ -33,14 +33,14 @@ services:
     ports:
       - "8000:8000"
     networks:
-      - confornia
+      - confornia_net
     depends_on:
       - confpostgres
     volumes:
       - .:/code # TODO coloquei isso para não precisar remover e subir os containers toda vez que o backend mudar
 
 networks:
-  confornia:
+  confornia_net:
     driver: bridge
 
 volumes:
