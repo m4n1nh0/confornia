@@ -27,8 +27,8 @@ services:
       - DOCS=/docs
       - REDOC=/redoc
       - OPEN_API_URL=/openapi.json
-      - ALLOWED_HOST=0.0.0.0:8000,localhost:8000,127.0.0.1:8000
-      - ALLOW_ORIGINS==http://localhost:3000,http://localhost:8000,http://127.0.0.1:8000
+      - ALLOWED_HOST=0.0.0.0:8000,localhost:8000,127.0.0.1:8000,vps53454.publiccloud.com.br:8000
+      - ALLOW_ORIGINS==http://localhost:3000,http://localhost:8000,http://127.0.0.1:8000,http://vps53454.publiccloud.com.br:8000
     command: bash -c "uvicorn main:app --host 0.0.0.0 --port 8000 --reload --no-server-header"
     ports:
       - "8000:8000"
