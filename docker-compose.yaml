@@ -1,0 +1,48 @@
+version: "3.8"
+
+services:
+  confpostgres:
+    build:
+      dockerfile: ./docker/postgres.dockerfile
+      context: .
+    container_name: confpostgres
+    environment:
+      - POSTGRES_DB=confornia
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    ports:
+      - "5435:5432"
+    networks:
+      - confornia
+    volumes:
+      - pgdata:/var/lib/postgresql/data/
+
+  confornia_app:
+    build:
+      dockerfile: ./docker/backend.dockerfile
+      context: .
+    container_name: confornia_app
+    environment:
+      - POSTGRES_URL=postgresql+asyncpg://postgres:postgres@db:5432/confornia
+      - DOCS=/docs
+      - REDOC=/redoc
+      - OPEN_API_URL=/openapi.json
+      - ALLOWED_HOST=0.0.0.0:8000,localhost:8000,127.0.0.1:8000
+      - ALLOW_ORIGINS==http://localhost:3000,http://localhost:8000,http://127.0.0.1:8000
+    command: bash -c "uvicorn main:app --host 0.0.0.0 --port 8000 --reload --no-server-header"
+    ports:
+      - "8000:8000"
+    networks:
+      - confornia
+    depends_on:
+      - confpostgres
+    volumes:
+      - .:/code # TODO coloquei isso para não precisar remover e subir os containers toda vez que o backend mudar
+
+networks:
+  confornia:
+    driver: bridge
+
+volumes:
+  pgdata:
+
